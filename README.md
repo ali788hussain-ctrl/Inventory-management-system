@@ -1,4 +1,4 @@
-# Advanced Inventory Management System (AIMS)
+# Inventory Management System (AIMS)
 
 A professional full-stack Inventory Management System built using FastAPI, React, MongoDB Atlas, and JWT Authentication.
 
