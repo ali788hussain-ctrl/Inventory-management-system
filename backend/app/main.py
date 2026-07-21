@@ -2,14 +2,17 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pymongo.errors import ConnectionFailure
 
+from app.api.v1.auth import router as auth_router
 from app.core.config import settings
 from app.database.mongodb import db
 
+
 app = FastAPI(
     title=f"{settings.app_name} API",
+    description="Backend API for the Advanced Inventory Management System.",
     version="1.0.0",
-    description="Backend API for the Advanced Inventory Management System",
 )
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -20,24 +23,29 @@ app.add_middleware(
 )
 
 
-@app.get("/")
-async def root():
-    return {
-        "message": f"{settings.app_name} API is running.",
-        "docs": "/docs",
-    }
+app.include_router(
+    auth_router,
+    prefix=settings.api_v1_prefix,
+)
 
 
-@app.get("/health")
-async def health():
-    return {
-        "status": "healthy",
-    }
-
-app.on_event("startup")
+@app.on_event("startup")
 async def startup_event():
     try:
         db.command("ping")
         print("MongoDB connected successfully!")
     except ConnectionFailure:
         print("Failed to connect to MongoDB.")
+
+
+@app.get("/")
+async def home():
+    return {
+        "message": "Advanced Inventory Management System API is running.",
+        "docs": "/docs",
+    }
+
+
+@app.get("/health")
+async def health():
+    return {"status": "healthy"}
