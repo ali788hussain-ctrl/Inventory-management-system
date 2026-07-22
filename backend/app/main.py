@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pymongo.errors import ConnectionFailure
 
 from app.api.v1.auth import router as auth_router
+from app.api.v1.products import router as product_router
 from app.core.config import settings
 from app.database.mongodb import db
 
@@ -25,6 +26,11 @@ app.add_middleware(
 
 app.include_router(
     auth_router,
+    prefix=settings.api_v1_prefix,
+)
+
+app.include_router(
+    product_router,
     prefix=settings.api_v1_prefix,
 )
 

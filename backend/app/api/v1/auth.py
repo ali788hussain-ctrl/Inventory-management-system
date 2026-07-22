@@ -1,5 +1,5 @@
-from fastapi import APIRouter, HTTPException, status
-
+from fastapi import APIRouter, Depends, HTTPException, status
+from app.dependencies.auth import get_current_user
 from app.database.mongodb import db
 from app.schemas.user import (
     TokenResponse,
@@ -70,3 +70,12 @@ def login(user_data: UserLogin) -> TokenResponse:
     return TokenResponse(
         access_token=access_token,
     )
+
+@router.get(
+    "/me",
+    response_model=UserResponse,
+)
+def get_my_profile(
+    current_user: dict = Depends(get_current_user),
+) -> UserResponse:
+    return format_user_response(current_user)
