@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pymongo.errors import ConnectionFailure
-
+from app.api.v1.categories import router as category_router
 from app.api.v1.auth import router as auth_router
 from app.api.v1.products import router as product_router
 from app.core.config import settings
@@ -34,6 +34,10 @@ app.include_router(
     prefix=settings.api_v1_prefix,
 )
 
+app.include_router(
+    category_router,
+    prefix=settings.api_v1_prefix,
+)
 
 @app.on_event("startup")
 async def startup_event():

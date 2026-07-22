@@ -10,3 +10,8 @@ db["products"].create_index(
     "sku",
     unique=True,
 )
+
+db["categories"].create_index(
+    "name",
+    unique=True,
+)
