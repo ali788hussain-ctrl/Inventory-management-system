@@ -1,6 +1,9 @@
 from datetime import datetime, timezone
+from math import ceil
+from re import escape
 
 from bson import ObjectId
+from pymongo import ASCENDING, DESCENDING
 from pymongo.errors import DuplicateKeyError
 
 from app.database.mongodb import db
@@ -46,7 +49,9 @@ def create_product(product_data, created_by: ObjectId) -> dict:
     try:
         result = products_collection.insert_one(product)
     except DuplicateKeyError:
-        raise ValueError("A product with this SKU already exists.")
+        raise ValueError(
+            "A product with this SKU already exists."
+        )
 
     created_product = products_collection.find_one(
         {"_id": result.inserted_id}
@@ -69,16 +74,121 @@ def get_product_by_id(product_id: str) -> dict | None:
     return format_product_response(product)
 
 
-def get_products(skip: int = 0, limit: int = 10) -> list[dict]:
-    products = products_collection.find().skip(skip).limit(limit)
+def get_products(
+    page: int = 1,
+    limit: int = 10,
+    search: str | None = None,
+    category: str | None = None,
+    min_price: float | None = None,
+    max_price: float | None = None,
+    is_active: bool | None = None,
+    sort_by: str = "created_at",
+    order: str = "desc",
+) -> dict:
+    filters: dict = {}
 
-    return [
+    if search:
+        safe_search = escape(search)
+
+        filters["$or"] = [
+            {
+                "name": {
+                    "$regex": safe_search,
+                    "$options": "i",
+                }
+            },
+            {
+                "sku": {
+                    "$regex": safe_search,
+                    "$options": "i",
+                }
+            },
+            {
+                "description": {
+                    "$regex": safe_search,
+                    "$options": "i",
+                }
+            },
+        ]
+
+    if category:
+        filters["category"] = {
+            "$regex": f"^{escape(category)}$",
+            "$options": "i",
+        }
+
+    if min_price is not None or max_price is not None:
+        filters["price"] = {}
+
+        if min_price is not None:
+            filters["price"]["$gte"] = min_price
+
+        if max_price is not None:
+            filters["price"]["$lte"] = max_price
+
+    if is_active is not None:
+        filters["is_active"] = is_active
+
+    allowed_sort_fields = {
+        "name",
+        "sku",
+        "category",
+        "price",
+        "quantity",
+        "created_at",
+        "updated_at",
+    }
+
+    if sort_by not in allowed_sort_fields:
+        raise ValueError(
+            "Invalid sort field. Allowed fields: "
+            f"{', '.join(sorted(allowed_sort_fields))}."
+        )
+
+    normalized_order = order.lower()
+
+    if normalized_order not in {"asc", "desc"}:
+        raise ValueError(
+            "Invalid sort order. Use 'asc' or 'desc'."
+        )
+
+    sort_direction = (
+        ASCENDING
+        if normalized_order == "asc"
+        else DESCENDING
+    )
+
+    skip = (page - 1) * limit
+
+    total = products_collection.count_documents(filters)
+
+    products = list(
+        products_collection.find(filters)
+        .sort(sort_by, sort_direction)
+        .skip(skip)
+        .limit(limit)
+    )
+
+    formatted_products = [
         format_product_response(product)
         for product in products
     ]
 
+    pages = ceil(total / limit) if total > 0 else 0
 
-def update_product(product_id: str, update_data: dict) -> dict | None:
+    return {
+        "items": formatted_products,
+        "total": total,
+        "page": page,
+        "limit": limit,
+        "pages": pages,
+    }
+
+
+def update_product(
+    product_id: str,
+    update_data: dict,
+) -> dict | None:
     if not ObjectId.is_valid(product_id):
         return None
 

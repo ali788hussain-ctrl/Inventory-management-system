@@ -38,6 +38,11 @@ class ProductUpdate(BaseModel):
         default=None,
         max_length=500,
     )
+    sku: str | None = Field(
+        default=None,
+        min_length=2,
+        max_length=50,
+    )
     category: str | None = Field(
         default=None,
         min_length=2,
@@ -46,10 +51,6 @@ class ProductUpdate(BaseModel):
     price: float | None = Field(
         default=None,
         gt=0,
-    )
-    quantity: int | None = Field(
-        default=None,
-        ge=0,
     )
     is_active: bool | None = None
 
@@ -66,3 +67,19 @@ class ProductResponse(BaseModel):
     is_active: bool
     created_at: datetime
     updated_at: datetime
+
+
+class PaginatedProductResponse(BaseModel):
+    items: list[ProductResponse]
+    total: int = Field(
+        ge=0,
+    )
+    page: int = Field(
+        ge=1,
+    )
+    limit: int = Field(
+        ge=1,
+    )
+    pages: int = Field(
+        ge=0,
+    )
