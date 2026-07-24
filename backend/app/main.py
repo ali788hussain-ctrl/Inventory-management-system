@@ -4,14 +4,18 @@ from pymongo.errors import ConnectionFailure
 
 from app.api.v1.auth import router as auth_router
 from app.api.v1.categories import router as category_router
+from app.api.v1.dashboard import router as dashboard_router
 from app.api.v1.inventory_transactions import (
     router as inventory_transaction_router,
 )
 from app.api.v1.products import router as product_router
+from app.api.v1.reports import router as reports_router
 from app.api.v1.suppliers import router as supplier_router
 from app.core.config import settings
+from app.core.exceptions import register_exception_handlers
+from app.database.indexes import create_indexes
 from app.database.mongodb import db
-from app.api.v1.dashboard import router as dashboard_router
+
 
 app = FastAPI(
     title=f"{settings.app_name} API",
@@ -20,6 +24,8 @@ app = FastAPI(
     ),
     version="1.0.0",
 )
+
+register_exception_handlers(app)
 
 
 app.add_middleware(
@@ -64,14 +70,25 @@ app.include_router(
     prefix=settings.api_v1_prefix,
 )
 
+app.include_router(
+    reports_router,
+    prefix=settings.api_v1_prefix,
+)
+
 
 @app.on_event("startup")
 async def startup_event():
     try:
         db.command("ping")
+        create_indexes()
         print("MongoDB connected successfully!")
+        print("Database indexes created successfully!")
+
     except ConnectionFailure:
         print("Failed to connect to MongoDB.")
+
+    except Exception as error:
+        print(f"Application startup error: {error}")
 
 
 @app.get("/")
@@ -83,8 +100,19 @@ async def home():
         "docs": "/docs",
     }
 
+
 @app.get("/health")
 async def health():
-    return {
-        "status": "healthy",
-    }
+    try:
+        db.command("ping")
+
+        return {
+            "status": "healthy",
+            "database": "connected",
+        }
+
+    except ConnectionFailure:
+        return {
+            "status": "unhealthy",
+            "database": "disconnected",
+        }

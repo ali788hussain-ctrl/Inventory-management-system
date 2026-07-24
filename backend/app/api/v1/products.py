@@ -19,9 +19,10 @@ from app.schemas.product import (
 )
 from app.services.product_service import (
     create_product,
-    delete_product,
+    deactivate_product,
     get_product_by_id,
     get_products,
+    restore_product,
     update_product,
 )
 
@@ -33,10 +34,6 @@ router = APIRouter(
 
 
 def get_user_object_id(current_user: dict) -> ObjectId:
-    """
-    Safely extract and convert the authenticated user's ID
-    into a MongoDB ObjectId.
-    """
     user_id = current_user.get("_id")
 
     if isinstance(user_id, ObjectId):
@@ -56,9 +53,6 @@ def get_user_object_id(current_user: dict) -> ObjectId:
     response_model=ProductResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Create a new product",
-    description=(
-        "Create a new product. The SKU must be unique."
-    ),
 )
 def create_new_product(
     product_data: ProductCreate,
@@ -86,10 +80,6 @@ def create_new_product(
     "",
     response_model=PaginatedProductResponse,
     summary="List products",
-    description=(
-        "Retrieve products with pagination, search, filtering, "
-        "and sorting."
-    ),
 )
 def read_products(
     current_user: Annotated[
@@ -105,21 +95,19 @@ def read_products(
         default=10,
         ge=1,
         le=100,
-        description="Maximum number of products per page.",
+        description="Maximum products per page.",
     ),
     search: str | None = Query(
         default=None,
         min_length=1,
         max_length=100,
-        description=(
-            "Search products by name, SKU, or description."
-        ),
+        description="Search by name, SKU, or description.",
     ),
     category: str | None = Query(
         default=None,
         min_length=1,
         max_length=100,
-        description="Filter products by exact category name.",
+        description="Filter by exact category name.",
     ),
     min_price: float | None = Query(
         default=None,
@@ -133,7 +121,7 @@ def read_products(
     ),
     is_active: bool | None = Query(
         default=None,
-        description="Filter products by active status.",
+        description="Filter by product active status.",
     ),
     sort_by: Literal[
         "name",
@@ -145,7 +133,7 @@ def read_products(
         "updated_at",
     ] = Query(
         default="created_at",
-        description="Product field used for sorting.",
+        description="Field used for sorting.",
     ),
     order: Literal[
         "asc",
@@ -192,7 +180,6 @@ def read_products(
     "/{product_id}",
     response_model=ProductResponse,
     summary="Get a product",
-    description="Retrieve a single product by its MongoDB ID.",
 )
 def read_product(
     product_id: str,
@@ -216,11 +203,6 @@ def read_product(
     "/{product_id}",
     response_model=ProductResponse,
     summary="Update a product",
-    description=(
-        "Update product information. Product quantity cannot be "
-        "updated directly and must be changed through an inventory "
-        "transaction."
-    ),
 )
 def update_existing_product(
     product_id: str,
@@ -273,8 +255,11 @@ def update_existing_product(
 @router.delete(
     "/{product_id}",
     status_code=status.HTTP_204_NO_CONTENT,
-    summary="Delete a product",
-    description="Permanently delete a product by its ID.",
+    summary="Deactivate a product",
+    description=(
+        "Soft delete a product by marking it inactive. "
+        "The product and transaction history remain stored."
+    ),
 )
 def remove_product(
     product_id: str,
@@ -283,14 +268,46 @@ def remove_product(
         Depends(get_current_user),
     ],
 ) -> Response:
-    deleted = delete_product(product_id)
+    deactivated = deactivate_product(product_id)
 
-    if not deleted:
+    if not deactivated:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Product not found.",
+            detail="Active product not found.",
         )
 
     return Response(
         status_code=status.HTTP_204_NO_CONTENT,
     )
+
+
+@router.patch(
+    "/{product_id}/restore",
+    response_model=ProductResponse,
+    summary="Restore a product",
+    description="Restore a previously deactivated product.",
+)
+def restore_existing_product(
+    product_id: str,
+    current_user: Annotated[
+        dict,
+        Depends(get_current_user),
+    ],
+):
+    restored = restore_product(product_id)
+
+    if not restored:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Inactive product not found.",
+        )
+
+    product = get_product_by_id(product_id)
+
+    if product is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Product not found after restoration.",
+        )
+
+    return product

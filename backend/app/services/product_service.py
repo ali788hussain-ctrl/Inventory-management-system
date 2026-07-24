@@ -48,6 +48,7 @@ def create_product(product_data, created_by: ObjectId) -> dict:
 
     try:
         result = products_collection.insert_one(product)
+
     except DuplicateKeyError:
         raise ValueError(
             "A product with this SKU already exists."
@@ -192,12 +193,26 @@ def update_product(
     if not ObjectId.is_valid(product_id):
         return None
 
+    if "quantity" in update_data:
+        raise ValueError(
+            "Product quantity cannot be updated directly."
+        )
+
+    if "sku" in update_data:
+        update_data["sku"] = update_data["sku"].upper()
+
     update_data["updated_at"] = datetime.now(timezone.utc)
 
-    result = products_collection.update_one(
-        {"_id": ObjectId(product_id)},
-        {"$set": update_data},
-    )
+    try:
+        result = products_collection.update_one(
+            {"_id": ObjectId(product_id)},
+            {"$set": update_data},
+        )
+
+    except DuplicateKeyError:
+        raise ValueError(
+            "A product with this SKU already exists."
+        )
 
     if result.matched_count == 0:
         return None
@@ -209,12 +224,41 @@ def update_product(
     return format_product_response(updated_product)
 
 
-def delete_product(product_id: str) -> bool:
+def deactivate_product(product_id: str) -> bool:
     if not ObjectId.is_valid(product_id):
         return False
 
-    result = products_collection.delete_one(
-        {"_id": ObjectId(product_id)}
+    result = products_collection.update_one(
+        {
+            "_id": ObjectId(product_id),
+            "is_active": True,
+        },
+        {
+            "$set": {
+                "is_active": False,
+                "updated_at": datetime.now(timezone.utc),
+            }
+        },
     )
 
-    return result.deleted_count == 1
+    return result.modified_count == 1
+
+
+def restore_product(product_id: str) -> bool:
+    if not ObjectId.is_valid(product_id):
+        return False
+
+    result = products_collection.update_one(
+        {
+            "_id": ObjectId(product_id),
+            "is_active": False,
+        },
+        {
+            "$set": {
+                "is_active": True,
+                "updated_at": datetime.now(timezone.utc),
+            }
+        },
+    )
+
+    return result.modified_count == 1
