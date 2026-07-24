@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from app.dependencies.auth import get_current_user
+
 from app.database.mongodb import db
+from app.dependencies.auth import get_current_user
 from app.schemas.user import (
     TokenResponse,
     UserLogin,
@@ -34,7 +35,10 @@ def format_user_response(user: dict) -> UserResponse:
 )
 def register(user_data: UserRegister) -> UserResponse:
     try:
-        user = register_user(db, user_data)
+        user = register_user(
+            db,
+            user_data,
+        )
 
         return format_user_response(user)
 
@@ -60,16 +64,19 @@ def login(user_data: UserLogin) -> TokenResponse:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password.",
-            headers={"WWW-Authenticate": "Bearer"},
+            headers={
+                "WWW-Authenticate": "Bearer",
+            },
         )
 
     access_token = create_access_token(
-        subject=str(user["_id"])
+        subject=str(user["_id"]),
     )
 
     return TokenResponse(
         access_token=access_token,
     )
+
 
 @router.get(
     "/me",

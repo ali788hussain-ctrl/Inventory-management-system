@@ -1,33 +1,27 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pymongo.errors import ConnectionFailure
+from pymongo.errors import PyMongoError
 
 from app.api.v1.auth import router as auth_router
-from app.api.v1.categories import router as category_router
+from app.api.v1.categories import router as categories_router
 from app.api.v1.dashboard import router as dashboard_router
-from app.api.v1.inventory_transactions import (
-    router as inventory_transaction_router,
-)
-from app.api.v1.products import router as product_router
+from app.api.v1.inventory_transactions import router as inventory_router
+from app.api.v1.products import router as products_router
 from app.api.v1.reports import router as reports_router
-from app.api.v1.suppliers import router as supplier_router
-from app.core.config import settings
+from app.api.v1.suppliers import router as suppliers_router
+
 from app.core.exceptions import register_exception_handlers
-from app.database.indexes import create_indexes
 from app.database.mongodb import db
 
 
 app = FastAPI(
-    title=f"{settings.app_name} API",
-    description=(
-        "Backend API for the Advanced Inventory Management System."
-    ),
+    title="Advanced Inventory Management System API",
+    description="Backend API for the Advanced Inventory Management System.",
     version="1.0.0",
 )
 
-register_exception_handlers(app)
 
-
+# CORS configuration
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -40,63 +34,23 @@ app.add_middleware(
 )
 
 
-app.include_router(
-    auth_router,
-    prefix=settings.api_v1_prefix,
-)
-
-app.include_router(
-    product_router,
-    prefix=settings.api_v1_prefix,
-)
-
-app.include_router(
-    category_router,
-    prefix=settings.api_v1_prefix,
-)
-
-app.include_router(
-    supplier_router,
-    prefix=settings.api_v1_prefix,
-)
-
-app.include_router(
-    inventory_transaction_router,
-    prefix=settings.api_v1_prefix,
-)
-
-app.include_router(
-    dashboard_router,
-    prefix=settings.api_v1_prefix,
-)
-
-app.include_router(
-    reports_router,
-    prefix=settings.api_v1_prefix,
-)
+# Global exception handlers
+register_exception_handlers(app)
 
 
 @app.on_event("startup")
 async def startup_event():
     try:
         db.command("ping")
-        create_indexes()
         print("MongoDB connected successfully!")
-        print("Database indexes created successfully!")
-
-    except ConnectionFailure:
-        print("Failed to connect to MongoDB.")
-
-    except Exception as error:
-        print(f"Application startup error: {error}")
+    except PyMongoError as error:
+        print(f"MongoDB startup error: {error}")
 
 
 @app.get("/")
-async def home():
+async def root():
     return {
-        "message": (
-            "Advanced Inventory Management System API is running."
-        ),
+        "message": "Advanced Inventory Management System API is running.",
         "docs": "/docs",
     }
 
@@ -111,8 +65,46 @@ async def health():
             "database": "connected",
         }
 
-    except ConnectionFailure:
+    except PyMongoError:
         return {
             "status": "unhealthy",
             "database": "disconnected",
         }
+
+
+# API routes
+# Each router already contains its own prefix, such as /auth or /dashboard.
+app.include_router(
+    auth_router,
+    prefix="/api/v1",
+)
+
+app.include_router(
+    products_router,
+    prefix="/api/v1",
+)
+
+app.include_router(
+    categories_router,
+    prefix="/api/v1",
+)
+
+app.include_router(
+    suppliers_router,
+    prefix="/api/v1",
+)
+
+app.include_router(
+    inventory_router,
+    prefix="/api/v1",
+)
+
+app.include_router(
+    dashboard_router,
+    prefix="/api/v1",
+)
+
+app.include_router(
+    reports_router,
+    prefix="/api/v1",
+)

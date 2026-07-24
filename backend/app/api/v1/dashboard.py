@@ -22,5 +22,5 @@ def read_dashboard_statistics(
         dict,
         Depends(get_current_user),
     ],
-):
+) -> DashboardResponse:
     return get_dashboard_statistics()
