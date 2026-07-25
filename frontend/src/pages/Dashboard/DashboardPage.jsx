@@ -1,25 +1,29 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Alert,
   Box,
   Button,
   Grid,
+  Snackbar,
   Stack,
 } from "@mui/material";
-import {
-  FiAlertTriangle,
-  FiBox,
-  FiLayers,
-  FiPackage,
-  FiRefreshCw,
-  FiTruck,
-} from "react-icons/fi";
+import Inventory2RoundedIcon from "@mui/icons-material/Inventory2Rounded";
+import CategoryRoundedIcon from "@mui/icons-material/CategoryRounded";
+import LocalShippingRoundedIcon from "@mui/icons-material/LocalShippingRounded";
+import WarehouseRoundedIcon from "@mui/icons-material/WarehouseRounded";
+import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
+import PaidRoundedIcon from "@mui/icons-material/PaidRounded";
+import RefreshRoundedIcon from "@mui/icons-material/RefreshRounded";
 
 import DashboardHeader from "../../components/dashboard/DashboardHeader";
 import StatCard from "../../components/dashboard/StatCard";
+import InventoryChart from "../../components/dashboard/InventoryChart";
+import CategoryPieChart from "../../components/dashboard/CategoryPieChart";
+import RecentTransactions from "../../components/dashboard/RecentTransactions";
+import LowStockTable from "../../components/dashboard/LowStockTable";
 import dashboardService from "../../services/dashboardService";
 
-const initialStatistics = {
+const initialDashboard = {
   total_products: 0,
   active_products: 0,
   total_categories: 0,
@@ -29,142 +33,208 @@ const initialStatistics = {
   recent_transactions: 0,
 };
 
-const DashboardPage = () => {
-  const [statistics, setStatistics] = useState(initialStatistics);
+const initialInventoryValue = {
+  total_products: 0,
+  total_quantity: 0,
+  total_inventory_value: 0,
+};
+
+function DashboardPage() {
+  const [dashboard, setDashboard] = useState(initialDashboard);
+  const [inventoryValue, setInventoryValue] = useState(initialInventoryValue);
+  const [transactionSummary, setTransactionSummary] = useState({
+    total_transactions: 0,
+    transaction_types: [],
+  });
+  const [recentTransactions, setRecentTransactions] = useState([]);
+  const [lowStockProducts, setLowStockProducts] = useState([]);
+
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
 
-  const loadDashboardStatistics = async () => {
+  const loadDashboard = useCallback(async (isRefresh = false) => {
     try {
-      setLoading(true);
+      if (isRefresh) {
+        setRefreshing(true);
+      } else {
+        setLoading(true);
+      }
+
       setError("");
 
-      const data = await dashboardService.getDashboardStatistics();
-      setStatistics(data);
-    } catch (requestError) {
-      console.error("Dashboard request failed:", requestError);
+      const [
+        dashboardData,
+        inventoryValueData,
+        transactionSummaryData,
+        recentTransactionsData,
+        lowStockData,
+      ] = await Promise.all([
+        dashboardService.getDashboardStatistics(),
+        dashboardService.getInventoryValue(),
+        dashboardService.getTransactionSummary(30),
+        dashboardService.getRecentTransactions(5),
+        dashboardService.getLowStockProducts(10),
+      ]);
 
+      setDashboard(dashboardData);
+      setInventoryValue(inventoryValueData);
+      setTransactionSummary(transactionSummaryData);
+      setRecentTransactions(recentTransactionsData);
+      setLowStockProducts(lowStockData);
+    } catch (err) {
       setError(
-        requestError.response?.data?.detail ||
-          "Unable to load dashboard statistics. Please try again."
+        err.response?.data?.detail ||
+          "Unable to load dashboard information. Please try again."
       );
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    loadDashboardStatistics();
-  }, []);
+    loadDashboard();
+  }, [loadDashboard]);
+
+  const currencyFormatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  });
 
   return (
     <Box>
+      <DashboardHeader />
+
       <Stack
         direction={{ xs: "column", sm: "row" }}
-        alignItems={{ xs: "flex-start", sm: "center" }}
-        justifyContent="space-between"
-        spacing={2}
-        sx={{ mb: 4 }}
+        justifyContent="flex-end"
+        mb={3}
       >
-        <DashboardHeader />
-
         <Button
           variant="outlined"
-          startIcon={<FiRefreshCw />}
-          onClick={loadDashboardStatistics}
-          disabled={loading}
+          startIcon={<RefreshRoundedIcon />}
+          disabled={refreshing}
+          onClick={() => loadDashboard(true)}
         >
-          Refresh
+          {refreshing ? "Refreshing..." : "Refresh data"}
         </Button>
       </Stack>
 
       {error && (
         <Alert
           severity="error"
-          sx={{ mb: 3 }}
           action={
-            <Button
-              color="inherit"
-              size="small"
-              onClick={loadDashboardStatistics}
-            >
+            <Button color="inherit" size="small" onClick={() => loadDashboard()}>
               Retry
             </Button>
           }
+          sx={{ mb: 3 }}
         >
           {error}
         </Alert>
       )}
 
       <Grid container spacing={3}>
-        <Grid size={{ xs: 12, sm: 6, xl: 3 }}>
+        <Grid size={{ xs: 12, sm: 6, lg: 4, xl: 2 }}>
           <StatCard
             title="Total Products"
-            value={statistics.total_products.toLocaleString()}
-            description={`${statistics.active_products.toLocaleString()} active products`}
-            icon={<FiPackage />}
+            value={dashboard.total_products}
+            description={`${dashboard.active_products} currently active`}
+            icon={<Inventory2RoundedIcon />}
             loading={loading}
-            accentColor="primary.main"
           />
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, xl: 3 }}>
+        <Grid size={{ xs: 12, sm: 6, lg: 4, xl: 2 }}>
           <StatCard
             title="Categories"
-            value={statistics.total_categories.toLocaleString()}
-            description="Product categories"
-            icon={<FiLayers />}
+            value={dashboard.total_categories}
+            description="Product classifications"
+            icon={<CategoryRoundedIcon />}
             loading={loading}
-            accentColor="info.main"
           />
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, xl: 3 }}>
+        <Grid size={{ xs: 12, sm: 6, lg: 4, xl: 2 }}>
           <StatCard
             title="Suppliers"
-            value={statistics.total_suppliers.toLocaleString()}
+            value={dashboard.total_suppliers}
             description="Registered suppliers"
-            icon={<FiTruck />}
+            icon={<LocalShippingRoundedIcon />}
             loading={loading}
-            accentColor="success.main"
           />
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, xl: 3 }}>
+        <Grid size={{ xs: 12, sm: 6, lg: 4, xl: 2 }}>
           <StatCard
             title="Total Stock"
-            value={statistics.total_stock.toLocaleString()}
-            description="Units currently available"
-            icon={<FiBox />}
+            value={dashboard.total_stock}
+            description="Units across inventory"
+            icon={<WarehouseRoundedIcon />}
             loading={loading}
-            accentColor="secondary.main"
           />
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6 }}>
+        <Grid size={{ xs: 12, sm: 6, lg: 4, xl: 2 }}>
           <StatCard
-            title="Low-Stock Products"
-            value={statistics.low_stock_products.toLocaleString()}
+            title="Inventory Value"
+            value={currencyFormatter.format(
+              inventoryValue.total_inventory_value
+            )}
+            description={`${inventoryValue.total_quantity} valued units`}
+            icon={<PaidRoundedIcon />}
+            loading={loading}
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 6, lg: 4, xl: 2 }}>
+          <StatCard
+            title="Low Stock"
+            value={dashboard.low_stock_products}
             description="Products requiring attention"
-            icon={<FiAlertTriangle />}
+            icon={<WarningAmberRoundedIcon />}
             loading={loading}
-            accentColor="warning.main"
           />
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6 }}>
-          <StatCard
-            title="Recent Transactions"
-            value={statistics.recent_transactions.toLocaleString()}
-            description="Latest recorded inventory activity"
-            icon={<FiRefreshCw />}
+        <Grid size={{ xs: 12, lg: 8 }}>
+          <InventoryChart
+            data={transactionSummary.transaction_types}
             loading={loading}
-            accentColor="primary.main"
           />
+        </Grid>
+
+        <Grid size={{ xs: 12, lg: 4 }}>
+          <CategoryPieChart
+            data={transactionSummary.transaction_types}
+            loading={loading}
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12 }}>
+          <RecentTransactions
+            transactions={recentTransactions}
+            loading={loading}
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12 }}>
+          <LowStockTable products={lowStockProducts} loading={loading} />
         </Grid>
       </Grid>
+
+      <Snackbar
+        open={refreshing}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert severity="info" variant="filled">
+          Refreshing dashboard data…
+        </Alert>
+      </Snackbar>
     </Box>
   );
-};
+}
 
 export default DashboardPage;
