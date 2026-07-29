@@ -37,7 +37,7 @@ function RecentTransactions({ transactions = [], loading = false }) {
     <Card>
       <CardContent sx={{ p: 0 }}>
         <Stack sx={{ px: 3, pt: 3, pb: 2 }}>
-          <Typography variant="h6" fontWeight={700}>
+          <Typography variant="h6" fontWeight={750}>
             Recent Transactions
           </Typography>
 
@@ -92,18 +92,25 @@ function RecentTransactions({ transactions = [], loading = false }) {
                         />
                       </TableCell>
 
-                      <TableCell>{transaction.quantity}</TableCell>
-
-                      <TableCell>
-                        {transaction.previous_quantity} →{" "}
-                        <strong>{transaction.new_quantity}</strong>
+                      <TableCell sx={{ fontWeight: 650 }}>
+                        {transaction.quantity}
                       </TableCell>
 
-                      <TableCell>
+                      <TableCell sx={{ color: "text.secondary" }}>
+                        {transaction.previous_quantity} →{" "}
+                        <Typography
+                          component="span"
+                          sx={{ fontWeight: 700, color: "text.primary" }}
+                        >
+                          {transaction.new_quantity}
+                        </Typography>
+                      </TableCell>
+
+                      <TableCell sx={{ color: "text.secondary" }}>
                         {transaction.reference || "—"}
                       </TableCell>
 
-                      <TableCell>
+                      <TableCell sx={{ color: "text.secondary" }}>
                         {new Intl.DateTimeFormat("en-US", {
                           month: "short",
                           day: "numeric",

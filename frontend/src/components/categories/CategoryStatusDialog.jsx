@@ -26,7 +26,7 @@ function CategoryStatusDialog({
       fullWidth
       maxWidth="xs"
     >
-      <DialogTitle sx={{ fontWeight: 700 }}>
+      <DialogTitle sx={{ fontWeight: 750 }}>
         {isRestore ? "Restore Category" : "Deactivate Category"}
       </DialogTitle>
 

@@ -5,6 +5,7 @@ import {
   Skeleton,
   Typography,
 } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 
 const StatCard = ({
   title,
@@ -12,23 +13,34 @@ const StatCard = ({
   icon,
   description,
   loading = false,
-  accentColor = "primary.main",
+  accentColor = "#3157C8",
 }) => {
   return (
     <Card
       sx={{
         height: "100%",
-        border: "1px solid",
-        borderColor: "divider",
-        boxShadow: "0 4px 20px rgba(15, 23, 42, 0.05)",
+        position: "relative",
+        overflow: "hidden",
         transition: "transform 0.2s ease, box-shadow 0.2s ease",
+
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 3,
+          bgcolor: accentColor,
+        },
+
         "&:hover": {
           transform: "translateY(-3px)",
-          boxShadow: "0 10px 30px rgba(15, 23, 42, 0.09)",
+          boxShadow:
+            "0 4px 10px rgba(15,23,42,0.06), 0 16px 34px rgba(15,23,42,0.09)",
         },
       }}
     >
-      <CardContent sx={{ p: 3, "&:last-child": { pb: 3 } }}>
+      <CardContent sx={{ p: 2.75, "&:last-child": { pb: 2.75 } }}>
         <Box
           sx={{
             display: "flex",
@@ -37,23 +49,25 @@ const StatCard = ({
             gap: 2,
           }}
         >
-          <Box>
+          <Box sx={{ minWidth: 0 }}>
             <Typography
               variant="body2"
               color="text.secondary"
-              sx={{ fontWeight: 600, mb: 1 }}
+              sx={{ fontWeight: 650, mb: 1 }}
+              noWrap
             >
               {title}
             </Typography>
 
             {loading ? (
-              <Skeleton width={90} height={48} />
+              <Skeleton width={90} height={44} />
             ) : (
               <Typography
                 variant="h4"
                 sx={{
-                  fontWeight: 750,
+                  fontWeight: 800,
                   lineHeight: 1.2,
+                  letterSpacing: "-0.02em",
                   color: "text.primary",
                 }}
               >
@@ -74,16 +88,16 @@ const StatCard = ({
 
           <Box
             sx={{
-              width: 48,
-              height: 48,
-              borderRadius: 3,
+              width: 46,
+              height: 46,
+              borderRadius: 2.5,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               color: accentColor,
-              bgcolor: `${accentColor}12`,
+              bgcolor: alpha(accentColor, 0.12),
               flexShrink: 0,
-              fontSize: 24,
+              fontSize: 22,
             }}
           >
             {icon}

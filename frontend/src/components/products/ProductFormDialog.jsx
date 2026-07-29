@@ -91,7 +91,7 @@ function ProductFormDialog({
       fullWidth
       maxWidth="md"
     >
-      <DialogTitle sx={{ fontWeight: 700 }}>
+      <DialogTitle sx={{ fontWeight: 750 }}>
         {isEditMode ? "Edit Product" : "Add New Product"}
       </DialogTitle>
 

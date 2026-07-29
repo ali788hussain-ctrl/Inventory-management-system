@@ -19,7 +19,7 @@ function LowStockTable({ products = [], loading = false }) {
     <Card>
       <CardContent sx={{ p: 0 }}>
         <Stack sx={{ px: 3, pt: 3, pb: 2 }}>
-          <Typography variant="h6" fontWeight={700}>
+          <Typography variant="h6" fontWeight={750}>
             Low Stock Products
           </Typography>
 
@@ -39,11 +39,11 @@ function LowStockTable({ products = [], loading = false }) {
             alignItems="center"
             justifyContent="center"
             spacing={1}
-            sx={{ py: 7 }}
+            sx={{ width: "100%", textAlign: "center", py: 7 }}
           >
-            <CheckCircleOutlineRoundedIcon color="success" fontSize="large" />
+            
 
-            <Typography fontWeight={700}>Stock levels look healthy</Typography>
+            <Typography fontWeight={750}>Stock levels look healthy</Typography>
 
             <Typography variant="body2" color="text.secondary">
               No products are currently below the selected threshold.
@@ -66,12 +66,16 @@ function LowStockTable({ products = [], loading = false }) {
                 {products.map((product) => (
                   <TableRow key={product.id} hover>
                     <TableCell>
-                      <Typography fontWeight={600}>{product.name}</Typography>
+                      <Typography fontWeight={650}>{product.name}</Typography>
                     </TableCell>
 
-                    <TableCell>{product.sku}</TableCell>
+                    <TableCell sx={{ color: "text.secondary" }}>
+                      {product.sku}
+                    </TableCell>
                     <TableCell>{product.category || "Uncategorized"}</TableCell>
-                    <TableCell>{product.quantity}</TableCell>
+                    <TableCell sx={{ fontWeight: 650 }}>
+                      {product.quantity}
+                    </TableCell>
 
                     <TableCell>
                       <Chip

@@ -28,6 +28,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
@@ -41,6 +42,8 @@ import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
 import productService from "../../services/productService";
 import ProductFormDialog from "../../components/products/ProductFormDialog";
 import ProductActionDialog from "../../components/products/ProductActionDialog";
+
+const ACCENT = "#3157C8";
 
 const initialPagination = {
   total: 0,
@@ -349,7 +352,21 @@ function ProductsPage() {
         mb={3}
       >
         <Box>
-          <Typography variant="h4" fontWeight={800}>
+          <Typography
+            variant="caption"
+            sx={{
+              display: "block",
+              color: ACCENT,
+              fontWeight: 750,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              mb: 0.5,
+            }}
+          >
+            Catalog
+          </Typography>
+
+          <Typography variant="h4" fontWeight={800} letterSpacing="-0.02em">
             Products
           </Typography>
 
@@ -530,15 +547,15 @@ function ProductsPage() {
                             sx={{
                               width: 42,
                               height: 42,
-                              borderRadius: 2,
+                              borderRadius: 2.25,
                               display: "grid",
                               placeItems: "center",
-                              bgcolor: "action.hover",
-                              color: "primary.main",
+                              bgcolor: alpha(ACCENT, 0.12),
+                              color: ACCENT,
                               flexShrink: 0,
                             }}
                           >
-                            <Inventory2OutlinedIcon />
+                            <Inventory2OutlinedIcon fontSize="small" />
                           </Box>
 
                           <Box sx={{ minWidth: 0 }}>
@@ -599,7 +616,9 @@ function ProductsPage() {
                         />
                       </TableCell>
 
-                      <TableCell>{formatDate(product.created_at)}</TableCell>
+                      <TableCell sx={{ color: "text.secondary" }}>
+                        {formatDate(product.created_at)}
+                      </TableCell>
 
                       <TableCell align="right">
                         <IconButton
@@ -622,14 +641,21 @@ function ProductsPage() {
                       spacing={1.5}
                       sx={{ py: 8 }}
                     >
-                      <Inventory2OutlinedIcon
+                      <Box
                         sx={{
-                          fontSize: 52,
-                          color: "text.disabled",
+                          width: 72,
+                          height: 72,
+                          borderRadius: "50%",
+                          display: "grid",
+                          placeItems: "center",
+                          bgcolor: alpha(ACCENT, 0.1),
+                          color: ACCENT,
                         }}
-                      />
+                      >
+                        <Inventory2OutlinedIcon sx={{ fontSize: 32 }} />
+                      </Box>
 
-                      <Typography variant="h6" fontWeight={700}>
+                      <Typography variant="h6" fontWeight={750}>
                         No products found
                       </Typography>
 

@@ -34,7 +34,8 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-
+import { alpha } from "@mui/material/styles";
+import { AddOutlined } from "@mui/icons-material";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
@@ -46,6 +47,8 @@ import FilterAltOffRoundedIcon from "@mui/icons-material/FilterAltOffRounded";
 import inventoryService from "../../services/inventoryService";
 import TransactionFormDialog from "../../components/inventory/TransactionFormDialog";
 import TransactionDetailsDialog from "../../components/inventory/TransactionDetailsDialog";
+
+const ACCENT = "#4F46E5";
 
 const transactionTypeOptions = [
   { value: "", label: "All transaction types" },
@@ -311,11 +314,25 @@ function InventoryPage() {
         direction={{ xs: "column", md: "row" }}
         alignItems={{ xs: "stretch", md: "center" }}
         justifyContent="space-between"
-        spacing={2}
-        mb={3}
+        spacing={1.5}
+        mb={2}
       >
         <Box>
-          <Typography variant="h4" fontWeight={800}>
+          <Typography
+            variant="caption"
+            sx={{
+              display: "block",
+              color: ACCENT,
+              fontWeight: 750,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              mb: 0.5,
+            }}
+          >
+            Stock Ledger
+          </Typography>
+
+          <Typography variant="h4" fontWeight={800} letterSpacing="-0.02em">
             Inventory Transactions
           </Typography>
 
@@ -334,7 +351,26 @@ function InventoryPage() {
           }}
           sx={{
             flexShrink: 0,
+            minWidth: "auto",
+            height: 40,
+            px: 2.25,
+            py: 0,
+            borderRadius: 2,
             whiteSpace: "nowrap",
+            bgcolor: ACCENT,
+            fontSize: "0.84rem",
+            fontWeight: 700,
+            lineHeight: 1,
+            textTransform: "none",
+            boxShadow: "0 4px 10px rgba(79, 70, 229, 0.18)",
+            "& .MuiButton-startIcon": {
+              mr: 0.75,
+              "& svg": { fontSize: 18 },
+            },
+            "&:hover": {
+              bgcolor: "#4338CA",
+              boxShadow: "0 5px 12px rgba(79, 70, 229, 0.24)",
+            },
           }}
         >
           Record Transaction
@@ -526,10 +562,11 @@ function InventoryPage() {
                             sx={{
                               width: 40,
                               height: 40,
-                              bgcolor: "primary.main",
+                              bgcolor: alpha(ACCENT, 0.14),
+                              color: ACCENT,
                             }}
                           >
-                            <Inventory2OutlinedIcon />
+                            <Inventory2OutlinedIcon fontSize="small" />
                           </Avatar>
 
                           <Box>
@@ -586,7 +623,7 @@ function InventoryPage() {
                         </Typography>
                       </TableCell>
 
-                      <TableCell align="right">
+                      <TableCell align="right" sx={{ color: "text.secondary" }}>
                         {transaction.previous_quantity}
                       </TableCell>
 
@@ -604,7 +641,7 @@ function InventoryPage() {
                         {transaction.reference || "—"}
                       </TableCell>
 
-                      <TableCell>
+                      <TableCell sx={{ color: "text.secondary" }}>
                         {formatDate(
                           transaction.created_at
                         )}
@@ -637,16 +674,23 @@ function InventoryPage() {
                         spacing={1.5}
                         sx={{ py: 8 }}
                       >
-                        <Inventory2OutlinedIcon
+                        <Box
                           sx={{
-                            fontSize: 52,
-                            color: "text.disabled",
+                            width: 72,
+                            height: 72,
+                            borderRadius: "50%",
+                            display: "grid",
+                            placeItems: "center",
+                            bgcolor: alpha(ACCENT, 0.1),
+                            color: ACCENT,
                           }}
-                        />
+                        >
+                          <Inventory2OutlinedIcon sx={{ fontSize: 32 }} />
+                        </Box>
 
                         <Typography
                           variant="h6"
-                          fontWeight={700}
+                          fontWeight={750}
                         >
                           No inventory transactions found
                         </Typography>
@@ -665,6 +709,10 @@ function InventoryPage() {
                           onClick={() =>
                             setFormOpen(true)
                           }
+                          sx={{
+                            bgcolor: ACCENT,
+                            "&:hover": { bgcolor: "#4338CA" },
+                          }}
                         >
                           Record Transaction
                         </Button>

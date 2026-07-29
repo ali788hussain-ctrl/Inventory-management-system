@@ -123,7 +123,7 @@ function LoginPage() {
           p: 7,
           color: "#FFFFFF",
           background:
-            "linear-gradient(145deg, #0F172A 0%, #172554 48%, #1E3A8A 100%)",
+            "linear-gradient(145deg, #0B1120 0%, #172554 48%, #1E3A8A 100%)",
         }}
       >
         <Box
@@ -162,8 +162,9 @@ function LoginPage() {
               height: 48,
               display: "grid",
               placeItems: "center",
-              borderRadius: 3,
-              bgcolor: "primary.light",
+              borderRadius: 2.5,
+              background:
+                "linear-gradient(135deg, #6C9BFF 0%, #3157C8 100%)",
               boxShadow: "0 12px 32px rgba(59, 130, 246, 0.35)",
             }}
           >
@@ -310,7 +311,8 @@ function LoginPage() {
                 display: "grid",
                 placeItems: "center",
                 borderRadius: 2.5,
-                bgcolor: "primary.main",
+                background:
+                  "linear-gradient(135deg, #3157C8 0%, #1E3A8A 100%)",
                 color: "#FFFFFF",
               }}
             >
@@ -331,6 +333,7 @@ function LoginPage() {
               },
               border: "1px solid",
               borderColor: "divider",
+              borderRadius: 3.5,
               boxShadow: "0 24px 60px rgba(15, 23, 42, 0.08)",
             }}
           >
@@ -481,7 +484,7 @@ function LoginPage() {
                     type="button"
                     underline="hover"
                     variant="body2"
-                    fontWeight={600}
+                    fontWeight={650}
                   >
                     Forgot password?
                   </Link>

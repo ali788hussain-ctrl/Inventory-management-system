@@ -136,7 +136,7 @@ function DashboardPage() {
         </Alert>
       )}
 
-      <Grid container spacing={3}>
+      <Grid container spacing={2.5}>
         <Grid size={{ xs: 12, sm: 6, lg: 4, xl: 2 }}>
           <StatCard
             title="Total Products"
@@ -144,6 +144,7 @@ function DashboardPage() {
             description={`${dashboard.active_products} currently active`}
             icon={<Inventory2RoundedIcon />}
             loading={loading}
+            accentColor="#3157C8"
           />
         </Grid>
 
@@ -154,6 +155,7 @@ function DashboardPage() {
             description="Product classifications"
             icon={<CategoryRoundedIcon />}
             loading={loading}
+            accentColor="#7C3AED"
           />
         </Grid>
 
@@ -164,6 +166,7 @@ function DashboardPage() {
             description="Registered suppliers"
             icon={<LocalShippingRoundedIcon />}
             loading={loading}
+            accentColor="#0D9488"
           />
         </Grid>
 
@@ -174,6 +177,7 @@ function DashboardPage() {
             description="Units across inventory"
             icon={<WarehouseRoundedIcon />}
             loading={loading}
+            accentColor="#4F46E5"
           />
         </Grid>
 
@@ -186,6 +190,7 @@ function DashboardPage() {
             description={`${inventoryValue.total_quantity} valued units`}
             icon={<PaidRoundedIcon />}
             loading={loading}
+            accentColor="#16A34A"
           />
         </Grid>
 
@@ -196,6 +201,7 @@ function DashboardPage() {
             description="Products requiring attention"
             icon={<WarningAmberRoundedIcon />}
             loading={loading}
+            accentColor="#DC2626"
           />
         </Grid>
 

@@ -42,7 +42,7 @@ function InventoryChart({ data = [], loading = false }) {
           mb={3}
         >
           <Box>
-            <Typography variant="h6" fontWeight={700}>
+            <Typography variant="h6" fontWeight={750}>
               Inventory Movement
             </Typography>
 
@@ -75,24 +75,33 @@ function InventoryChart({ data = [], loading = false }) {
               data={chartData}
               margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
             >
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                vertical={false}
+                stroke="#EEF2F7"
+              />
 
               <XAxis
                 dataKey="name"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 12 }}
+                tick={{ fontSize: 12, fill: "#64748B" }}
               />
 
               <YAxis
                 allowDecimals={false}
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 12 }}
+                tick={{ fontSize: 12, fill: "#64748B" }}
               />
 
               <Tooltip
-                cursor={{ fill: "rgba(148, 163, 184, 0.08)" }}
+                cursor={{ fill: "rgba(49,87,200,0.05)" }}
+                contentStyle={{
+                  borderRadius: 10,
+                  border: "1px solid #E2E8F0",
+                  fontSize: "0.8rem",
+                }}
                 formatter={(value, name) => [
                   value,
                   name === "quantity" ? "Quantity" : "Transactions",
@@ -101,6 +110,7 @@ function InventoryChart({ data = [], loading = false }) {
 
               <Bar
                 dataKey="quantity"
+                fill="#3157C8"
                 radius={[8, 8, 0, 0]}
                 maxBarSize={52}
               />

@@ -23,7 +23,7 @@ function SupplierDeleteDialog({
       fullWidth
       maxWidth="xs"
     >
-      <DialogTitle sx={{ fontWeight: 700 }}>
+      <DialogTitle sx={{ fontWeight: 750 }}>
         Remove Supplier
       </DialogTitle>
 

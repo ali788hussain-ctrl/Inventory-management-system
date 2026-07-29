@@ -24,7 +24,7 @@ function ProductActionDialog({
       maxWidth="xs"
       fullWidth
     >
-      <DialogTitle sx={{ fontWeight: 700 }}>
+      <DialogTitle sx={{ fontWeight: 750 }}>
         {isRestore ? "Restore Product" : "Deactivate Product"}
       </DialogTitle>
 

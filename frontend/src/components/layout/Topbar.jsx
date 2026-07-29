@@ -71,7 +71,7 @@ function Topbar({ isMobile, onMenuClick }) {
         width: "100%",
         zIndex: 1100,
         color: "text.primary",
-        bgcolor: alpha("#FFFFFF", 0.94),
+        bgcolor: alpha("#FFFFFF", 0.92),
         borderBottom: "1px solid",
         borderColor: "divider",
         backdropFilter: "blur(16px)",
@@ -81,8 +81,8 @@ function Topbar({ isMobile, onMenuClick }) {
       <Toolbar
         sx={{
           minHeight: {
-            xs: "56px !important",
-            md: "62px !important",
+            xs: "58px !important",
+            md: "64px !important",
           },
           px: {
             xs: 1.5,
@@ -102,6 +102,8 @@ function Topbar({ isMobile, onMenuClick }) {
               width: 36,
               height: 36,
               bgcolor: "background.default",
+              border: "1px solid",
+              borderColor: "divider",
             }}
           >
             <Menu fontSize="small" />
@@ -123,8 +125,9 @@ function Topbar({ isMobile, onMenuClick }) {
             px: 1.4,
             border: "1px solid",
             borderColor: "divider",
-            borderRadius: 2,
+            borderRadius: 2.5,
             bgcolor: "background.default",
+            transition: "background-color 160ms ease, border-color 160ms ease",
 
             "&:focus-within": {
               bgcolor: "background.paper",
@@ -185,6 +188,7 @@ function Topbar({ isMobile, onMenuClick }) {
                     height: 17,
                     fontSize: "0.65rem",
                     fontWeight: 750,
+                    border: "2px solid #FFFFFF",
                   },
                 }}
               >
@@ -216,10 +220,11 @@ function Topbar({ isMobile, onMenuClick }) {
               py: 0.4,
               px: 0.45,
               pr: {
-                md: 0.8,
+                md: 0.9,
               },
               cursor: "pointer",
-              borderRadius: 2,
+              borderRadius: 2.5,
+              transition: "background-color 160ms ease",
 
               "&:hover": {
                 bgcolor: "action.hover",
@@ -234,6 +239,7 @@ function Topbar({ isMobile, onMenuClick }) {
                   "linear-gradient(135deg, #3157C8 0%, #1E3A8A 100%)",
                 fontSize: "0.77rem",
                 fontWeight: 750,
+                boxShadow: "0 4px 10px rgba(49,87,200,0.25)",
               }}
             >
               AH

@@ -28,6 +28,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 
 import {
   Bar,
@@ -54,6 +55,8 @@ import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 
 import reportService from "../../services/reportService";
 
+const ACCENT = "#3157C8";
+
 const transactionTypeLabels = {
   STOCK_IN: "Stock In",
   STOCK_OUT: "Stock Out",
@@ -64,7 +67,7 @@ const transactionTypeLabels = {
 };
 
 const chartColors = [
-  "#24449A",
+  "#3157C8",
   "#16A34A",
   "#DC2626",
   "#F59E0B",
@@ -399,24 +402,28 @@ function ReportsPage() {
         inventoryValue.total_quantity
       )} total units`,
       icon: <Inventory2OutlinedIcon />,
+      accent: "#16A34A",
     },
     {
       title: "Total Products",
       value: formatNumber(inventoryValue.total_products),
       description: "Products currently tracked",
       icon: <CategoryOutlinedIcon />,
+      accent: "#3157C8",
     },
     {
       title: "Low Stock",
       value: formatNumber(lowStock.length),
       description: `At or below ${threshold} units`,
       icon: <WarningAmberRoundedIcon />,
+      accent: "#D97706",
     },
     {
       title: "Out of Stock",
       value: formatNumber(outOfStock.length),
       description: "Products requiring attention",
       icon: <RemoveShoppingCartOutlinedIcon />,
+      accent: "#DC2626",
     },
     {
       title: "Transactions",
@@ -425,6 +432,7 @@ function ReportsPage() {
       ),
       description: `During the last ${days} days`,
       icon: <ReceiptLongOutlinedIcon />,
+      accent: "#7C3AED",
     },
   ];
 
@@ -434,11 +442,25 @@ function ReportsPage() {
         direction={{ xs: "column", md: "row" }}
         alignItems={{ xs: "stretch", md: "center" }}
         justifyContent="space-between"
-        spacing={2}
-        mb={3}
+        spacing={1.5}
+        mb={2}
       >
         <Box>
-          <Typography variant="h4" fontWeight={800}>
+          <Typography
+            variant="caption"
+            sx={{
+              display: "block",
+              color: ACCENT,
+              fontWeight: 750,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              mb: 0.5,
+            }}
+          >
+            Insights
+          </Typography>
+
+          <Typography variant="h4" fontWeight={800} letterSpacing="-0.02em">
             Reports
           </Typography>
 
@@ -459,7 +481,26 @@ function ReportsPage() {
           }
           sx={{
             flexShrink: 0,
+            minWidth: "auto",
+            height: 40,
+            px: 2.25,
+            py: 0,
+            borderRadius: 2,
             whiteSpace: "nowrap",
+            bgcolor: ACCENT,
+            fontSize: "0.84rem",
+            fontWeight: 700,
+            lineHeight: 1,
+            textTransform: "none",
+            boxShadow: "0 4px 10px rgba(49, 87, 200, 0.18)",
+            "& .MuiButton-startIcon": {
+              mr: 0.75,
+              "& svg": { fontSize: 18 },
+            },
+            "&:hover": {
+              bgcolor: "#294CB5",
+              boxShadow: "0 5px 12px rgba(49, 87, 200, 0.24)",
+            },
           }}
         >
           {refreshing ? "Refreshing..." : "Refresh Reports"}
@@ -567,7 +608,8 @@ function ReportsPage() {
                   <Stack spacing={2}>
                     <Avatar
                       sx={{
-                        bgcolor: "primary.main",
+                        bgcolor: alpha(card.accent, 0.14),
+                        color: card.accent,
                         width: 44,
                         height: 44,
                       }}
@@ -579,6 +621,7 @@ function ReportsPage() {
                       <Typography
                         color="text.secondary"
                         variant="body2"
+                        fontWeight={600}
                       >
                         {card.title}
                       </Typography>
@@ -611,7 +654,7 @@ function ReportsPage() {
           <Card sx={{ height: 420 }}>
             <CardContent sx={{ height: "100%" }}>
               <Stack spacing={0.5} mb={2}>
-                <Typography variant="h6" fontWeight={700}>
+                <Typography variant="h6" fontWeight={750}>
                   Transaction Summary
                 </Typography>
 
@@ -644,7 +687,7 @@ function ReportsPage() {
                       }}
                     />
 
-                    <Typography fontWeight={700}>
+                    <Typography fontWeight={750}>
                       No transactions found
                     </Typography>
 
@@ -661,27 +704,37 @@ function ReportsPage() {
                       <CartesianGrid
                         strokeDasharray="3 3"
                         vertical={false}
+                        stroke="#EEF2F7"
                       />
 
                       <XAxis
                         dataKey="type"
-                        tick={{ fontSize: 12 }}
+                        tick={{ fontSize: 12, fill: "#64748B" }}
                         interval={0}
                         angle={-15}
                         textAnchor="end"
                         height={65}
                       />
 
-                      <YAxis allowDecimals={false} />
+                      <YAxis
+                        allowDecimals={false}
+                        tick={{ fontSize: 12, fill: "#64748B" }}
+                      />
 
-                      <RechartsTooltip />
+                      <RechartsTooltip
+                        contentStyle={{
+                          borderRadius: 10,
+                          border: "1px solid #E2E8F0",
+                          fontSize: "0.8rem",
+                        }}
+                      />
 
                       <Legend />
 
                       <Bar
                         dataKey="transactions"
                         name="Transactions"
-                        fill="#24449A"
+                        fill="#3157C8"
                         radius={[6, 6, 0, 0]}
                       />
 
@@ -702,7 +755,7 @@ function ReportsPage() {
         <Grid item xs={12} lg={4}>
           <Card sx={{ height: 420 }}>
             <CardContent sx={{ height: "100%" }}>
-              <Typography variant="h6" fontWeight={700}>
+              <Typography variant="h6" fontWeight={750}>
                 Stock Movement
               </Typography>
 
@@ -737,7 +790,7 @@ function ReportsPage() {
                       }}
                     />
 
-                    <Typography fontWeight={700}>
+                    <Typography fontWeight={750}>
                       No stock movement
                     </Typography>
                   </Stack>
@@ -760,9 +813,15 @@ function ReportsPage() {
                         ))}
                       </Pie>
 
-                      <RechartsTooltip />
+                      <RechartsTooltip
+                        contentStyle={{
+                          borderRadius: 10,
+                          border: "1px solid #E2E8F0",
+                          fontSize: "0.8rem",
+                        }}
+                      />
 
-                      <Legend />
+                      <Legend iconType="circle" />
                     </PieChart>
                   </ResponsiveContainer>
                 )}
@@ -821,7 +880,7 @@ function ReportsPage() {
             spacing={2}
           >
             <Box>
-              <Typography variant="h6" fontWeight={700}>
+              <Typography variant="h6" fontWeight={750}>
                 Low-Stock Products
               </Typography>
 
@@ -978,16 +1037,23 @@ function ReportsPage() {
                       alignItems="center"
                       justifyContent="center"
                       spacing={1}
-                      sx={{ py: 7 }}
+                      sx={{ width: "100%", textAlign: "center", py: 7 }}
                     >
-                      <WarningAmberRoundedIcon
+                      <Box
                         sx={{
-                          fontSize: 50,
-                          color: "text.disabled",
+                          width: 64,
+                          height: 64,
+                          borderRadius: "50%",
+                          display: "grid",
+                          placeItems: "center",
+                          bgcolor: alpha("#D97706", 0.1),
+                          color: "warning.main",
                         }}
-                      />
+                      >
+                        <WarningAmberRoundedIcon sx={{ fontSize: 28 }} />
+                      </Box>
 
-                      <Typography variant="h6" fontWeight={700}>
+                      <Typography variant="h6" fontWeight={750}>
                         No low-stock products
                       </Typography>
 
@@ -1013,7 +1079,7 @@ function ReportsPage() {
             spacing={2}
           >
             <Box>
-              <Typography variant="h6" fontWeight={700}>
+              <Typography variant="h6" fontWeight={750}>
                 Out-of-Stock Products
               </Typography>
 
@@ -1154,16 +1220,23 @@ function ReportsPage() {
                         alignItems="center"
                         justifyContent="center"
                         spacing={1}
-                        sx={{ py: 7 }}
+                        sx={{ width: "100%", textAlign: "center", py: 7 }}
                       >
-                        <RemoveShoppingCartOutlinedIcon
+                        <Box
                           sx={{
-                            fontSize: 50,
-                            color: "text.disabled",
+                            width: 64,
+                            height: 64,
+                            borderRadius: "50%",
+                            display: "grid",
+                            placeItems: "center",
+                            bgcolor: alpha("#DC2626", 0.1),
+                            color: "error.main",
                           }}
-                        />
+                        >
+                          <RemoveShoppingCartOutlinedIcon sx={{ fontSize: 28 }} />
+                        </Box>
 
-                        <Typography variant="h6" fontWeight={700}>
+                        <Typography variant="h6" fontWeight={750}>
                           No out-of-stock products
                         </Typography>
 

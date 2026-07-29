@@ -97,7 +97,9 @@ function SidebarContent({
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",
-        bgcolor: "#0D172B",
+        bgcolor: "#0B1120",
+        backgroundImage:
+          "radial-gradient(circle at 0% 0%, rgba(91,140,255,0.12), transparent 45%)",
         color: "#FFFFFF",
       }}
     >
@@ -108,14 +110,14 @@ function SidebarContent({
           collapsed ? "center" : "space-between"
         }
         sx={{
-          minHeight: 64,
-          px: collapsed ? 1 : 1.75,
+          minHeight: 66,
+          px: collapsed ? 1 : 2,
         }}
       >
         <Stack
           direction="row"
           alignItems="center"
-          spacing={1.15}
+          spacing={1.25}
           sx={{ minWidth: 0 }}
         >
           <Avatar
@@ -123,12 +125,13 @@ function SidebarContent({
             sx={{
               width: 38,
               height: 38,
-              borderRadius: 2,
+              borderRadius: 2.25,
               background:
-                "linear-gradient(135deg, #5B8CFF 0%, #3157C8 100%)",
+                "linear-gradient(135deg, #6C9BFF 0%, #3157C8 60%, #1E3A8A 100%)",
               fontWeight: 800,
               fontSize: "0.9rem",
-              boxShadow: "0 5px 14px rgba(49,87,200,0.28)",
+              letterSpacing: "-0.02em",
+              boxShadow: "0 6px 16px rgba(49,87,200,0.35)",
             }}
           >
             IM
@@ -137,9 +140,10 @@ function SidebarContent({
           {!collapsed && (
             <Box sx={{ minWidth: 0 }}>
               <Typography
-                fontSize="0.95rem"
+                fontSize="0.96rem"
                 fontWeight={800}
                 lineHeight={1.25}
+                letterSpacing="-0.01em"
                 noWrap
               >
                 Inventory Pro
@@ -149,7 +153,8 @@ function SidebarContent({
                 variant="caption"
                 noWrap
                 sx={{
-                  color: "rgba(255,255,255,0.53)",
+                  color: "rgba(255,255,255,0.48)",
+                  fontWeight: 500,
                 }}
               >
                 Management System
@@ -163,7 +168,7 @@ function SidebarContent({
             <IconButton
               onClick={onCollapseToggle}
               sx={{
-                color: "rgba(255,255,255,0.65)",
+                color: "rgba(255,255,255,0.55)",
 
                 "&:hover": {
                   color: "#FFFFFF",
@@ -179,7 +184,7 @@ function SidebarContent({
 
       <Divider
         sx={{
-          borderColor: "rgba(255,255,255,0.07)",
+          borderColor: "rgba(255,255,255,0.06)",
         }}
       />
 
@@ -188,7 +193,7 @@ function SidebarContent({
           flexGrow: 1,
           overflowY: "auto",
           overflowX: "hidden",
-          py: 1.1,
+          py: 1.25,
         }}
       >
         {!collapsed && (
@@ -196,12 +201,12 @@ function SidebarContent({
             variant="caption"
             sx={{
               display: "block",
-              px: 2.25,
+              px: 2.5,
               pt: 0.75,
-              pb: 0.85,
-              color: "rgba(255,255,255,0.37)",
+              pb: 1,
+              color: "rgba(255,255,255,0.32)",
               fontWeight: 750,
-              letterSpacing: "0.08em",
+              letterSpacing: "0.1em",
               textTransform: "uppercase",
             }}
           >
@@ -209,7 +214,7 @@ function SidebarContent({
           </Typography>
         )}
 
-        <List sx={{ px: 1, py: 0 }}>
+        <List sx={{ px: 1.25, py: 0 }}>
           {navigationItems.map((item) => (
             <Tooltip
               key={item.path}
@@ -224,55 +229,45 @@ function SidebarContent({
                   isMobile ? onMobileToggle : undefined
                 }
                 sx={{
-                  position: "relative",
-                  minHeight: 44,
-                  mb: 0.4,
-                  px: collapsed ? 1 : 1.45,
+                  minHeight: 42,
+                  mb: 0.35,
+                  px: collapsed ? 1 : 1.5,
                   justifyContent: collapsed
                     ? "center"
                     : "flex-start",
-                  borderRadius: 2,
-                  color: "rgba(255,255,255,0.68)",
-                  overflow: "hidden",
-
-                  "&::before": {
-                    content: '""',
-                    position: "absolute",
-                    left: 0,
-                    top: "21%",
-                    width: 3,
-                    height: "58%",
-                    borderRadius: "0 4px 4px 0",
-                    bgcolor: "transparent",
-                  },
+                  borderRadius: 2.5,
+                  color: "rgba(255,255,255,0.6)",
+                  transition:
+                    "background-color 160ms ease, color 160ms ease",
 
                   "&.active": {
-                    bgcolor: "rgba(74,118,223,0.22)",
+                    bgcolor: "#3157C8",
                     color: "#FFFFFF",
-
-                    "&::before": {
-                      bgcolor: "#67A0FF",
-                    },
+                    boxShadow: "0 6px 16px rgba(49,87,200,0.35)",
 
                     "& .MuiListItemIcon-root": {
-                      color: "#74A8FF",
+                      color: "#FFFFFF",
+                    },
+
+                    "&:hover": {
+                      bgcolor: "#3157C8",
                     },
                   },
 
                   "&:hover": {
-                    bgcolor: "rgba(255,255,255,0.07)",
+                    bgcolor: "rgba(255,255,255,0.06)",
                     color: "#FFFFFF",
                   },
                 }}
               >
                 <ListItemIcon
                   sx={{
-                    minWidth: collapsed ? 0 : 38,
+                    minWidth: collapsed ? 0 : 36,
                     justifyContent: "center",
                     color: "inherit",
 
                     "& svg": {
-                      fontSize: 20,
+                      fontSize: 19,
                     },
                   }}
                 >
@@ -283,8 +278,8 @@ function SidebarContent({
                   <ListItemText
                     primary={item.label}
                     primaryTypographyProps={{
-                      fontSize: "0.86rem",
-                      fontWeight: 650,
+                      fontSize: "0.85rem",
+                      fontWeight: 600,
                     }}
                   />
                 )}
@@ -296,11 +291,11 @@ function SidebarContent({
 
       <Divider
         sx={{
-          borderColor: "rgba(255,255,255,0.07)",
+          borderColor: "rgba(255,255,255,0.06)",
         }}
       />
 
-      <Box sx={{ p: 1 }}>
+      <Box sx={{ p: 1.25 }}>
         <Tooltip
           title={collapsed ? "Logout" : ""}
           placement="right"
@@ -309,23 +304,23 @@ function SidebarContent({
           <ListItemButton
             onClick={handleLogout}
             sx={{
-              minHeight: 44,
-              px: collapsed ? 1 : 1.45,
+              minHeight: 42,
+              px: collapsed ? 1 : 1.5,
               justifyContent: collapsed
                 ? "center"
                 : "flex-start",
-              borderRadius: 2,
-              color: "rgba(255,255,255,0.68)",
+              borderRadius: 2.5,
+              color: "rgba(255,255,255,0.6)",
 
               "&:hover": {
-                bgcolor: "rgba(239,68,68,0.13)",
+                bgcolor: "rgba(239,68,68,0.14)",
                 color: "#FCA5A5",
               },
             }}
           >
             <ListItemIcon
               sx={{
-                minWidth: collapsed ? 0 : 38,
+                minWidth: collapsed ? 0 : 36,
                 justifyContent: "center",
                 color: "inherit",
               }}
@@ -337,8 +332,8 @@ function SidebarContent({
               <ListItemText
                 primary="Logout"
                 primaryTypographyProps={{
-                  fontSize: "0.86rem",
-                  fontWeight: 650,
+                  fontSize: "0.85rem",
+                  fontWeight: 600,
                 }}
               />
             )}
@@ -353,7 +348,7 @@ function SidebarContent({
                 display: "flex",
                 mx: "auto",
                 mt: 0.5,
-                color: "rgba(255,255,255,0.65)",
+                color: "rgba(255,255,255,0.55)",
 
                 "&:hover": {
                   bgcolor: "rgba(255,255,255,0.08)",

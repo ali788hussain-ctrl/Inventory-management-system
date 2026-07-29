@@ -29,6 +29,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
@@ -44,6 +45,8 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import supplierService from "../../services/supplierService";
 import SupplierFormDialog from "../../components/suppliers/SupplierFormDialog";
 import SupplierDeleteDialog from "../../components/suppliers/SupplierDeleteDialog";
+
+const ACCENT = "#0D9488";
 
 function SuppliersPage() {
   const [suppliers, setSuppliers] = useState([]);
@@ -358,7 +361,21 @@ function SuppliersPage() {
         mb={3}
       >
         <Box>
-          <Typography variant="h4" fontWeight={800}>
+          <Typography
+            variant="caption"
+            sx={{
+              display: "block",
+              color: ACCENT,
+              fontWeight: 750,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              mb: 0.5,
+            }}
+          >
+            Sourcing
+          </Typography>
+
+          <Typography variant="h4" fontWeight={800} letterSpacing="-0.02em">
             Suppliers
           </Typography>
 
@@ -375,6 +392,8 @@ function SuppliersPage() {
           sx={{
             alignSelf: { xs: "stretch", md: "center" },
             px: 2.5,
+            bgcolor: ACCENT,
+            "&:hover": { bgcolor: "#0B7A70" },
           }}
         >
           Add Supplier
@@ -538,9 +557,10 @@ function SuppliersPage() {
                           sx={{
                             width: 42,
                             height: 42,
-                            bgcolor: "primary.main",
+                            bgcolor: alpha(ACCENT, 0.14),
+                            color: ACCENT,
                             fontSize: 15,
-                            fontWeight: 700,
+                            fontWeight: 750,
                           }}
                         >
                           {getInitials(supplier.name) || (
@@ -635,7 +655,7 @@ function SuppliersPage() {
                       />
                     </TableCell>
 
-                    <TableCell>
+                    <TableCell sx={{ color: "text.secondary" }}>
                       {formatDate(supplier.created_at)}
                     </TableCell>
 
@@ -661,14 +681,21 @@ function SuppliersPage() {
                       spacing={1.5}
                       sx={{ py: 8 }}
                     >
-                      <LocalShippingOutlinedIcon
+                      <Box
                         sx={{
-                          fontSize: 52,
-                          color: "text.disabled",
+                          width: 72,
+                          height: 72,
+                          borderRadius: "50%",
+                          display: "grid",
+                          placeItems: "center",
+                          bgcolor: alpha(ACCENT, 0.1),
+                          color: ACCENT,
                         }}
-                      />
+                      >
+                        <LocalShippingOutlinedIcon sx={{ fontSize: 32 }} />
+                      </Box>
 
-                      <Typography variant="h6" fontWeight={700}>
+                      <Typography variant="h6" fontWeight={750}>
                         No suppliers found
                       </Typography>
 
@@ -685,6 +712,10 @@ function SuppliersPage() {
                         variant="contained"
                         startIcon={<AddRoundedIcon />}
                         onClick={openCreateDialog}
+                        sx={{
+                          bgcolor: ACCENT,
+                          "&:hover": { bgcolor: "#0B7A70" },
+                        }}
                       >
                         Add Supplier
                       </Button>

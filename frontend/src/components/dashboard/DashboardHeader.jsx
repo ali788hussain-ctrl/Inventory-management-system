@@ -24,12 +24,27 @@ const DashboardHeader = () => {
     "there";
 
   return (
-    <Box>
+    <Box sx={{ mb: 3 }}>
+      <Typography
+        variant="caption"
+        sx={{
+          display: "block",
+          color: "primary.main",
+          fontWeight: 750,
+          letterSpacing: "0.08em",
+          textTransform: "uppercase",
+          mb: 0.5,
+        }}
+      >
+        Dashboard
+      </Typography>
+
       <Typography
         variant="h4"
         component="h1"
         sx={{
-          fontWeight: 700,
+          fontWeight: 800,
+          letterSpacing: "-0.02em",
           color: "text.primary",
           mb: 0.5,
         }}

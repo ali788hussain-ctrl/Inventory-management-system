@@ -1,4 +1,6 @@
 import { Box, Card, CardContent, Typography } from "@mui/material";
+import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
+import { alpha } from "@mui/material/styles";
 
 function PagePlaceholder({ title, description }) {
   return (
@@ -17,14 +19,30 @@ function PagePlaceholder({ title, description }) {
       </Box>
 
       <Card>
-        <CardContent sx={{ p: 4 }}>
-          <Typography variant="h5">
+        <CardContent sx={{ p: 5, textAlign: "center" }}>
+          <Box
+            sx={{
+              width: 64,
+              height: 64,
+              mx: "auto",
+              mb: 2,
+              borderRadius: "50%",
+              display: "grid",
+              placeItems: "center",
+              bgcolor: alpha("#3157C8", 0.1),
+              color: "primary.main",
+            }}
+          >
+            <Inventory2OutlinedIcon sx={{ fontSize: 28 }} />
+          </Box>
+
+          <Typography variant="h5" fontWeight={750}>
             {title} module
           </Typography>
 
           <Typography
             color="text.secondary"
-            sx={{ mt: 1 }}
+            sx={{ mt: 1, maxWidth: 420, mx: "auto" }}
           >
             This page is ready for professional content and API
             integration.

@@ -129,7 +129,7 @@ const theme = createTheme({
   },
 
   shape: {
-    borderRadius: 10,
+    borderRadius: 12,
   },
 
   shadows: [
@@ -251,8 +251,9 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           border: `1px solid ${BORDER}`,
-          borderRadius: 12,
-          boxShadow: "0 3px 12px rgba(15,23,42,0.04)",
+          borderRadius: 14,
+          boxShadow:
+            "0 1px 3px rgba(15,23,42,0.04), 0 10px 26px rgba(15,23,42,0.045)",
           backgroundImage: "none",
         },
       },
@@ -345,17 +346,19 @@ const theme = createTheme({
     MuiTableCell: {
       styleOverrides: {
         head: {
-          padding: "11px 14px",
-          fontSize: "0.79rem",
+          padding: "12px 16px",
+          fontSize: "0.76rem",
           fontWeight: 750,
-          color: "#334155",
+          color: "#475569",
           backgroundColor: "#F8FAFC",
           whiteSpace: "nowrap",
+          letterSpacing: "0.02em",
+          textTransform: "uppercase",
         },
 
         body: {
-          padding: "11px 14px",
-          fontSize: "0.84rem",
+          padding: "12px 16px",
+          fontSize: "0.85rem",
         },
 
         root: {

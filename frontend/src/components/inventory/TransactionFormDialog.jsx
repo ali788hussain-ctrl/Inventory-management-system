@@ -17,6 +17,8 @@ import {
   Typography,
 } from "@mui/material";
 
+const ACCENT = "#4F46E5";
+
 const transactionTypes = [
   {
     value: "STOCK_IN",
@@ -122,7 +124,7 @@ function TransactionFormDialog({
       fullWidth
       maxWidth="sm"
     >
-      <DialogTitle sx={{ fontWeight: 700 }}>
+      <DialogTitle sx={{ fontWeight: 750 }}>
         Record Inventory Transaction
       </DialogTitle>
 
@@ -341,6 +343,10 @@ function TransactionFormDialog({
           form="inventory-transaction-form"
           variant="contained"
           disabled={loading || products.length === 0}
+          sx={{
+            bgcolor: ACCENT,
+            "&:hover": { bgcolor: "#4338CA" },
+          }}
         >
           {loading ? "Recording..." : "Record Transaction"}
         </Button>

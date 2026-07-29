@@ -58,7 +58,7 @@ function TransactionDetailsDialog({
         {label}
       </Typography>
 
-      <Typography fontWeight={600} textAlign="right">
+      <Typography fontWeight={650} textAlign="right">
         {value ?? "—"}
       </Typography>
     </Stack>
@@ -71,7 +71,7 @@ function TransactionDetailsDialog({
       fullWidth
       maxWidth="sm"
     >
-      <DialogTitle sx={{ fontWeight: 700 }}>
+      <DialogTitle sx={{ fontWeight: 750 }}>
         Transaction Details
       </DialogTitle>
 
@@ -82,7 +82,7 @@ function TransactionDetailsDialog({
             justifyContent="space-between"
             alignItems="center"
           >
-            <Typography variant="h6" fontWeight={700}>
+            <Typography variant="h6" fontWeight={750}>
               {productName}
             </Typography>
 

@@ -15,7 +15,7 @@ import {
   Tooltip,
 } from "recharts";
 
-const CHART_COLORS = ["#2563eb", "#16a34a", "#f59e0b", "#dc2626"];
+const CHART_COLORS = ["#16A34A", "#DC2626", "#0284C7", "#D97706"];
 
 const TRANSACTION_LABELS = {
   STOCK_IN: "Stock In",
@@ -36,7 +36,7 @@ function CategoryPieChart({ data = [], loading = false }) {
     <Card sx={{ height: "100%" }}>
       <CardContent sx={{ p: 3 }}>
         <Stack mb={2}>
-          <Typography variant="h6" fontWeight={700}>
+          <Typography variant="h6" fontWeight={750}>
             Transaction Distribution
           </Typography>
 
@@ -81,8 +81,14 @@ function CategoryPieChart({ data = [], loading = false }) {
                 ))}
               </Pie>
 
-              <Tooltip />
-              <Legend verticalAlign="bottom" />
+              <Tooltip
+                contentStyle={{
+                  borderRadius: 10,
+                  border: "1px solid #E2E8F0",
+                  fontSize: "0.8rem",
+                }}
+              />
+              <Legend verticalAlign="bottom" iconType="circle" />
             </PieChart>
           </ResponsiveContainer>
         )}

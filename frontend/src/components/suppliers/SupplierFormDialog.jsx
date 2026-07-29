@@ -83,7 +83,7 @@ function SupplierFormDialog({
       fullWidth
       maxWidth="md"
     >
-      <DialogTitle sx={{ fontWeight: 700 }}>
+      <DialogTitle sx={{ fontWeight: 750 }}>
         {isEditMode ? "Edit Supplier" : "Add New Supplier"}
       </DialogTitle>
 
@@ -215,6 +215,10 @@ function SupplierFormDialog({
           form="supplier-form"
           variant="contained"
           disabled={loading}
+          sx={{
+            bgcolor: "#0D9488",
+            "&:hover": { bgcolor: "#0B7A70" },
+          }}
         >
           {loading
             ? isEditMode

@@ -29,6 +29,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
@@ -42,6 +43,8 @@ import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import categoryService from "../../services/categoryService";
 import CategoryFormDialog from "../../components/categories/CategoryFormDialog";
 import CategoryStatusDialog from "../../components/categories/CategoryStatusDialog";
+
+const ACCENT = "#7C3AED";
 
 function CategoriesPage() {
   const [categories, setCategories] = useState([]);
@@ -382,7 +385,21 @@ function CategoriesPage() {
         mb={3}
       >
         <Box sx={{ minWidth: 0 }}>
-          <Typography variant="h4" fontWeight={800}>
+          <Typography
+            variant="caption"
+            sx={{
+              display: "block",
+              color: ACCENT,
+              fontWeight: 750,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              mb: 0.5,
+            }}
+          >
+            Catalog
+          </Typography>
+
+          <Typography variant="h4" fontWeight={800} letterSpacing="-0.02em">
             Categories
           </Typography>
 
@@ -404,6 +421,10 @@ function CategoriesPage() {
             px: 2.5,
             py: 1.1,
             whiteSpace: "nowrap",
+            bgcolor: ACCENT,
+            "&:hover": {
+              bgcolor: "#6D28D9",
+            },
           }}
         >
           Add Category
@@ -579,9 +600,10 @@ function CategoriesPage() {
                           sx={{
                             width: 42,
                             height: 42,
-                            bgcolor: "primary.main",
+                            bgcolor: alpha(ACCENT, 0.14),
+                            color: ACCENT,
                             fontSize: 15,
-                            fontWeight: 700,
+                            fontWeight: 750,
                           }}
                         >
                           {getInitials(category.name) || (
@@ -636,11 +658,11 @@ function CategoriesPage() {
                       />
                     </TableCell>
 
-                    <TableCell>
+                    <TableCell sx={{ color: "text.secondary" }}>
                       {formatDate(category.created_at)}
                     </TableCell>
 
-                    <TableCell>
+                    <TableCell sx={{ color: "text.secondary" }}>
                       {formatDate(category.updated_at)}
                     </TableCell>
 
@@ -668,14 +690,21 @@ function CategoriesPage() {
                       spacing={1.5}
                       sx={{ py: 8 }}
                     >
-                      <CategoryOutlinedIcon
+                      <Box
                         sx={{
-                          fontSize: 52,
-                          color: "text.disabled",
+                          width: 72,
+                          height: 72,
+                          borderRadius: "50%",
+                          display: "grid",
+                          placeItems: "center",
+                          bgcolor: alpha(ACCENT, 0.1),
+                          color: ACCENT,
                         }}
-                      />
+                      >
+                        <CategoryOutlinedIcon sx={{ fontSize: 32 }} />
+                      </Box>
 
-                      <Typography variant="h6" fontWeight={700}>
+                      <Typography variant="h6" fontWeight={750}>
                         No categories found
                       </Typography>
 
@@ -692,6 +721,10 @@ function CategoriesPage() {
                         variant="contained"
                         startIcon={<AddRoundedIcon />}
                         onClick={openCreateDialog}
+                        sx={{
+                          bgcolor: ACCENT,
+                          "&:hover": { bgcolor: "#6D28D9" },
+                        }}
                       >
                         Add Category
                       </Button>
