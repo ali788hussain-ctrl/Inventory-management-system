@@ -44,4 +44,4 @@ advanced-inventory-management-system/
 
 ## Status
 
-🚧 Currently under development.
+🚧 Need Modifications
